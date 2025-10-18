@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Your Special Gift</title>
+    <style>
+        /* CSS cho giao diện */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #fce0e6, #ffadba); /* Màu hồng nhạt gradient */
+        }
+
+        .phone-mockup {
+            width: 375px; /* Kích thước điện thoại cơ bản */
+            height: 667px;
+            background-color: #fff;
+            border-radius: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #333; /* Khung điện thoại */
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, #fef8f9, #ffe9ee);
+        }
+
+        /* Ẩn các màn hình ban đầu */
+        .gift-screen, .message-screen, .music-screen, .photos-screen {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .lock-screen {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Style cho màn hình quà tặng */
+        .gift-screen, .message-screen, .music-screen, .photos-screen {
+            background: linear-gradient(180deg, #ffe9ee, #ffc5d1);
+        }
+        
+        /* Hiển thị màn hình khi được kích hoạt */
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        h1 {
+            color: #d11e4e;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .passcode-input {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .passcode-input input {
+            width: 30px;
+            height: 40px;
+            margin: 0 5px;
+            text-align: center;
+            font-size: 20px;
+            border: none;
+            border-bottom: 3px solid #ff7b92;
+            background: transparent;
+            color: #d11e4e;
+            pointer-events: none; /* Chỉ nhập qua bàn phím ảo */
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 80%;
+            max-width: 250px;
+        }
+
+        .keypad button {
+            background-color: #ffc9d4;
+            color: #d11e4e;
+            border: 2px solid #ff7b92;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        .keypad button:active {
+            background-color: #ff9fb4;
+        }
+
+        /* Giao diện màn hình quà tặng */
+        .gift-content h2 {
+            font-size: 30px;
+            color: #d11e4e;
+            margin-top: 0;
+        }
+
+        .gift-items {
+            display: flex;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .gift-item {
+            cursor: pointer;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .gift-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-item span {
+            font-size: 40px;
+            color: #ff7b92;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .gift-item p {
+            font-size: 14px;
+            color: #d11e4e;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* Giao diện màn hình nội dung */
+        .content-header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            padding: 10px 0;
+        }
+
+        .content-header button {
+            background: transparent;
+            border: none;
+            color: #d11e4e;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .content-area {
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .message-area p {
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .music-area p, .photos-area p {
+            color: #333;
+            text-align: center;
+        }
+
+        .music-area span {
+            font-size: 50px;
+            display: block;
+            text-align: center;
+            color: #ff7b92;
+        }
+        
+        .photos-area span {
+            font-size: 50px;
+            display: block;
+            text-align: center;
+            color: #ff7b92;
+        }
+
+        /* Animation cho màn hình mở khóa */
+        @keyframes unlock-animation {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+            100% { transform: scale(0.9); opacity: 0; }
+        }
+
+        .unlocking {
+            animation: unlock-animation 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-mockup">
+        
+        <div id="lockScreen" class="screen lock-screen">
+            <h1 style="color: #ff7b92; font-size: 28px;">Send him/her a message with a code</h1>
+            <h1 style="font-size: 20px;">Unlock your special gift</h1>
+            
+            <div class="passcode-input" id="passcodeInput">
+                <input type="text" maxlength="1" disabled>
+                <input type="text" maxlength="1" disabled>
+                <input type="text" maxlength="1" disabled>
+                <input type="text" maxlength="1" disabled>
+            </div>
+            
+            <div class="keypad" id="keypad">
+                <button data-key="1">1</button>
+                <button data-key="2">2</button>
+                <button data-key="3">3</button>
+                <button data-key="4">4</button>
+                <button data-key="5">5</button>
+                <button data-key="6">6</button>
+                <button data-key="7">7</button>
+                <button data-key="8">8</button>
+                <button data-key="9">9</button>
+                <button data-key="0" style="grid-column: 2 / span 1;">0</button>
+            </div>
+        </div>
+
+        <div id="giftScreen" class="screen gift-screen">
+            <h2 style="margin-top: 50px;">Happy Anniversary!</h2>
+            <p style="color: #d11e4e;">Click an icon to view your gift.</p>
+            
+            <div class="gift-items">
+                <div class="gift-item" data-target="messageScreen">
+                    <span>💌</span>
+                    <p>Message</p>
+                </div>
+                <div class="gift-item" data-target="musicScreen">
+                    <span>🎧</span>
+                    <p>Music</p>
+                </div>
+                <div class="gift-item" data-target="photosScreen">
+                    <span>📸</span>
+                    <p>Photos</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="messageScreen" class="screen message-screen">
+            <div class="content-header">
+                <button onclick="navigate('giftScreen')">← Back</button>
+            </div>
+            <h2 style="margin-top: 0;">A Message For You</h2>
+            <div class="content-area message-area">
+                <p>Dear [Tên người nhận],</p>
+                <p>Happy Anniversary! Mỗi ngày bên em/anh đều là một món quà. Anh/Em muốn gửi đến em/anh những kỷ niệm đẹp nhất của chúng ta. Hãy cùng nhau tạo thêm nhiều điều tuyệt vời hơn nữa nhé!</p>
+                <p style="text-align: right; margin-top: 20px;">Yêu em/anh rất nhiều,</p>
+                <p style="text-align: right;">[Tên người gửi]</p>
+            </div>
+        </div>
+
+        <div id="musicScreen" class="screen music-screen">
+            <div class="content-header">
+                <button onclick="navigate('giftScreen')">← Back</button>
+            </div>
+            <h2 style="margin-top: 0;">Music For You</h2>
+            <div class="content-area music-area">
+                <span>🎵</span>
+                <p style="font-weight: bold;">Songs that remind me of you:</p>
+                <p>1. [Tên bài hát 1] - [Ca sĩ]<br>
+                2. [Tên bài hát 2] - [Ca sĩ]<br>
+                3. [Tên bài hát 3] - [Ca sĩ]</p>
+            </div>
+        </div>
+
+        <div id="photosScreen" class="screen photos-screen">
+            <div class="content-header">
+                <button onclick="navigate('giftScreen')">← Back</button>
+            </div>
+            <h2 style="margin-top: 0;">Pictures of Us</h2>
+            <div class="content-area photos-area">
+                <span>🖼️</span>
+                <p>Imagine your beautiful photo album here!</p>
+                <p style="font-size: 12px; margin-top: 20px;">(Trong phiên bản thực tế, bạn sẽ chèn các thẻ `<img>` vào đây)</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript cho logic khóa mã số và chuyển trang
+        
+        const CORRECT_PASSCODE = "1234"; // Đặt mã số bí mật ở đây
+        let currentPasscode = "";
+        const keypad = document.getElementById('keypad');
+        const passcodeInputs = document.querySelectorAll('#passcodeInput input');
+        const lockScreen = document.getElementById('lockScreen');
+        const giftScreen = document.getElementById('giftScreen');
+
+        // Hàm cập nhật hiển thị mã số
+        function updatePasscodeDisplay() {
+            passcodeInputs.forEach((input, index) => {
+                input.value = currentPasscode[index] || ''; // Hiển thị số đã nhập
+            });
+        }
+
+        // Xử lý bấm phím số
+        keypad.addEventListener('click', (event) => {
+            const key = event.target.getAttribute('data-key');
+            
+            if (key !== null && currentPasscode.length < 4) {
+                currentPasscode += key;
+                updatePasscodeDisplay();
+
+                if (currentPasscode.length === 4) {
+                    setTimeout(checkPasscode, 300); // Kiểm tra sau khi nhập xong
+                }
+            }
+        });
+
+        // Hàm kiểm tra mã số
+        function checkPasscode() {
+            if (currentPasscode === CORRECT_PASSCODE) {
+                // Mã số đúng: Bắt đầu chuyển màn hình
+                lockScreen.classList.add('unlocking');
+                
+                setTimeout(() => {
+                    lockScreen.classList.remove('active');
+                    lockScreen.classList.remove('unlocking');
+                    giftScreen.classList.add('active');
+                }, 500); // Thời gian chờ cho animation
+                
+                currentPasscode = ""; // Reset mã số
+            } else {
+                // Mã số sai: Nháy báo lỗi và reset
+                passcodeInputs.forEach(input => {
+                    input.style.borderBottomColor = 'red';
+                });
+                
+                setTimeout(() => {
+                    passcodeInputs.forEach(input => {
+                        input.style.borderBottomColor = '#ff7b92';
+                    });
+                    currentPasscode = "";
+                    updatePasscodeDisplay();
+                }, 500);
+            }
+        }
+
+        // Logic chuyển màn hình nội dung
+        const giftItems = document.querySelectorAll('.gift-item');
+        giftItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetId = item.getAttribute('data-target');
+                navigate(targetId);
+            });
+        });
+
+        function navigate(targetId) {
+            const allScreens = document.querySelectorAll('.screen');
+            allScreens.forEach(screen => screen.classList.remove('active'));
+
+            const targetScreen = document.getElementById(targetId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+        }
+
+        // Khởi tạo ban đầu
+        document.addEventListener('DOMContentLoaded', () => {
+            lockScreen.classList.add('active');
+        });
+    </script>
+</body>
+</html>
